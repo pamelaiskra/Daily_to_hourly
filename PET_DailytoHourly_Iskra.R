@@ -1,3 +1,10 @@
+#R code to disaggregate daily PET into hourly PET using 
+#Information has been corrected by interception of saturated grasslands on days with  rainfall 
+#Disaggregated using Skew Power Exponential function
+
+#Originally written by Chris Hutton from University of Bristol (2016)
+#Revised, updated, assembled and complemented with relevant libraries by Iskra Mejía from University of Bristol (2017)
+
 install.packages("reshape")
 install.packages("RAtmosphere")
 install.packages("gamlss.dist") 
@@ -11,28 +18,24 @@ setwd("E:/DynaTOPMODEL/R_stats")
 
 ################### These bits need to be changed
 
-#Initial date for analysis in format day, month, year 
-  anfangszeit <- c(01,01,1961)                                                   
-#Final date for analysis in format day, month, year 
-  endzeit <- c(31,12,2015)
 #Path and name of the input PET file
-  RawInputfile <- read.table("E:/DynaTOPMODEL/Docs_from_EnvObs/Hourly_PET/daily_peti_1961_2015_23016.txt") 
+  RawInputfile <- read.table("C:/sample_file_PET_XXXX.txt") 
 #Path and name of the output file
-  outputfile <- ("E:/DynaTOPMODEL/Docs_from_EnvObs/Hourly_PET/hourly_peti_1961_2015_23016.txt")
+  outputfile <- ("C:/PET_hourly.txt")
   
 #Lat and lon of centre of catchment (23016: -1,64 55,02)
   latitude <- 55.02
   longitude <- -1.64
   
 #Comment/Uncomment the following lines accordingly:  
-  #Option 1 when using data from /projects/The_Env_Virtual_observatory/DynaTOP_data/Input_Data/Daily_PET/CHESS_PET
+  #Option 1 when using data CHESS
     names(RawInputfile) <- c("year", "month", "day", "PET")
     nummer <- c(1:nrow(RawInputfile))
-    InputDataFrame<- data.frame(nummer,RawInputfile)
+    FileForAnalysis <- data.frame(nummer,RawInputfile)
   
-  #Option 2 when using data from /projects/The_Env_Virtual_observatory/Daily_Hydrological_Data/Evaporation/Daily_time_series_for_GB_50m_cut_catchments/PE
+  #Option 2 when using data from MORECS
     #names(RawInputfile) <-c("num","year","month","day","dayagain","PET")
-    #InputDataFrame <- RawInputfile[,c(1,2,3,4,6)]
+    #FileForAnalysis <- RawInputfile[,c(2,3,4,6)]
   
 ################### Functions
 
@@ -134,23 +137,6 @@ petTimeSeries <- function(data, lat, long){
 }
 
 ################### Code
-
-#Determines initial and final rows of the input file that will be analysed
-InitialDay_number <- dayYear(anfangszeit[1],anfangszeit[2],anfangszeit[3])
-Subset_IntitialYear <- InputDataFrame[InputDataFrame$year %in% anfangszeit[3],]
-InitJahr_row <- Subset_IntitialYear[1,1]
-InitJahrMonat_row <- InitJahr_row+InitialDay_number-1
-
-FinalDay_number<- dayYear(endzeit[1],endzeit[2],endzeit[3])
-Subset_FinalYear <- InputDataFrame[InputDataFrame$year %in% endzeit[3],]
-FinJahr_row <- Subset_FinalYear[1,1]
-FinJahrMonat_row <- FinJahr_row+FinalDay_number-1
-
-#Creates file for analysis based on initial and final rows
-cosa <- InputDataFrame[(InitJahrMonat_row):(FinJahrMonat_row),]
-rm(FinalDay_number,FinJahr_row,InitialDay_number,InitJahr_row,Subset_FinalYear,Subset_IntitialYear)
-FileForAnalysis <- cosa[,2:5]
-rm(cosa)
 
 ##### calculate hourly PET time-series from input data
 petHourly <- petTimeSeries(FileForAnalysis, latitude, longitude)

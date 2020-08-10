@@ -1,0 +1,11 @@
+15 minute discharge data is taken from
+/projects/The_Env_Virtual_observatory/Sub_Daily_Hydrological_Data/Discharge/River Flow Data 15minute/Processed_csv_files
+
+Iskra wrote the python code to convert 15-minute data to hourly data.
+Hourly data for a given hour is the average of the values on :15, :30, :45 and :00.
+If in any of those times, there's a NaN, the code writes out -9999.0000000000 for the entire hour.
+
+DAILY DISCHARGE
+/projects/The_Env_Virtual_observatory/Daily_Hydrological_Data/Discharge Data/NRFA_updated_excel_files
+or
+/projects/The_Env_Virtual_observatory/DynaTOP_data/Input_Data/Daily_Discharge

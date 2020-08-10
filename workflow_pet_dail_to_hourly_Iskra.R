@@ -17,24 +17,19 @@
 
 ##### call in source functions
     
-    setwd("E:/DynaTOPMODEL/R_stats")
-    source("source_pet_daily_to_hourly.R")
+    setwd("C:My_directory")
+    source("source_code.R")
 
 ##### call in example data
-    data <- read.table("E:/DynaTOPMODEL/R_stats/GB_50m_catchcut_daily_PET_gauge_num_39020_GEMMA.txt", header = TRUE)
-
-    #subset data to required time period
-    dat <- cbind(data[,2],data[,3],data[,4],data[,6])
-    
-    dat <- dat[dat[,1] > 1999 & dat[,1] < 2001,]
+    data <- read.table("sample_file.txt", header = TRUE)
 
 ##### calculate hourly PET time-series from input data
     latitude <- 51.7
     longitude <- -1.8
-    petHourly <- petTimeSeries(dat, latitude, longitude)
+    petHourly <- petTimeSeries(data, latitude, longitude)
 
 ##### wrie output to file
-    write.table(petHourly,"E:/DynaTOPMODEL/R_stats/GB_revisdar-GEMMA-codigo.txt")
+    write.table(petHourly,"C:/PET_hourly.txt")
 
 #####check output
     
@@ -43,7 +38,7 @@
     
     #total sum check
     sum(petHourly$PET)
-    sum(dat[,4])
+    sum(data[,4])
 
 
 
